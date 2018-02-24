@@ -100,3 +100,7 @@
     service:
       name: redis
       state: restarted
+
+  - name: enable Redis to Start at startup
+    become: yes
+    command: systemctl enable redis
