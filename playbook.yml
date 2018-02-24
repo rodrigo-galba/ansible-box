@@ -12,6 +12,8 @@
     gem_path: "/home/{{ host_user }}/.rvm/gems/{{ ruby }}:/home/{{ host_user }}/.rvm/gems/{{ ruby }}@global"
     redis_port: 6379
     redis_password: secret
+    rabbitmq_username: user2
+    rabbitmq_password: secret
   tasks:
     - name: make sure the system encoding is utf-8
       become: yes
@@ -33,3 +35,4 @@
     - include: tasks/java.yml
     - include: tasks/postgresql.yml
     - include: tasks/redis.yml
+    - include: tasks/rabbitmq.yml
