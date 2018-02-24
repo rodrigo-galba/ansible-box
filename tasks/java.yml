@@ -1,0 +1,12 @@
+---
+- name: Install Java base packages
+  apt: pkg={{ item }} state=latest
+  become: yes
+  with_items:
+    - openjdk-7-jdk
+    - zip
+
+# mkdir -p src/main/java/hello
+# curl -s https://get.sdkman.io | bash
+# source ~/.zshrc
+# sdk install gradle 3.3

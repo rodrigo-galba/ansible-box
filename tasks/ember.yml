@@ -1,0 +1,6 @@
+---
+- name: install bower
+  shell: sudo npm install -g bower
+
+- name: install ember
+  shell: sudo npm install -g ember-cli

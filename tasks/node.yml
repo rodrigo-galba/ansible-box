@@ -1,0 +1,9 @@
+---
+- name: update node distribution package
+  shell: curl -sL https://deb.nodesource.com/setup | sudo bash -
+
+- name: update nodejs
+  apt: pkg={{ item }} state=latest
+  sudo: yes
+  with_items:
+    - nodejs

@@ -1,0 +1,21 @@
+---
+- hosts: production
+  vars:
+    ruby: ruby-2.3.1
+    db_user: ubuntu
+    root_db_password: s3cr3t
+    project_name: paredao-bbb
+    project_user: ubuntu
+    project_root: "/home/{{ host_user }}/{{ project_name }}"
+    project_path: "{{ project_root }}"
+    host_user: "{{ project_user }}"
+    rvm_path: "/home/{{ host_user }}/.rvm/gems/{{ ruby }}/bin:/home/{{ host_user }}/.rvm/gems/{{ ruby }}@global/bin:/home/{{ host_user }}/.rvm/rubies/{{ ruby }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/{{ host_user }}/.rvm/bin:/home/{{ host_user }}/.rvm/bin"
+    gem_path: "/home/{{ host_user }}/.rvm/gems/{{ ruby }}@global"
+  tasks:
+    - include: tasks/apt.yml
+    - include: tasks/node.yml
+    - include: tasks/postgresql.yml
+    - include: tasks/ruby.yml
+    # - include: tasks/application-production.yml
+    - include: tasks/puma.yml
+    - include: tasks/nginx.yml

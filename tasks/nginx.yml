@@ -1,0 +1,6 @@
+---
+- name: Copy Nginx configuration file
+  sudo: yes
+  template:
+    src: "../templates/nginx.conf"
+    dest: /etc/nginx/sites-available/default

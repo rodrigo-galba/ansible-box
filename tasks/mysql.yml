@@ -1,0 +1,41 @@
+---
+- name: install mysql
+  apt: pkg={{ item }} state=latest
+  sudo: yes
+  with_items:
+    - python-mysqldb
+    - mysql-server-core-5.6
+    - mysql-server-5.6
+    - mysql-client-5.6
+    - libmysqlclient-dev
+
+- name: ensure mysql is running and starts on boot
+  sudo: yes
+  service: name=mysql state=started enabled=true
+
+- name: update mysql root password for all root accounts
+  sudo: yes
+  mysql_user: name=root host=localhost password={{ root_db_password }}
+
+- name: copy .my.cnf file with root password credentials
+  sudo: yes
+  template: src=templates/root/.my.cnf dest=/root/.my.cnf owner=root mode=0600
+
+- name: update mysql root password for all root accounts
+  sudo: yes
+  mysql_user: name=root host={{ item }} password={{ root_db_password }}
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+
+- name: ensure anonymous users are not in the database
+  sudo: yes
+  mysql_user: name='' host={{ item }} state=absent
+  with_items:
+    - localhost
+    - "{{ inventory_hostname }}"
+
+- name: remove the test database
+  sudo: yes
+  mysql_db: name=test state=absent

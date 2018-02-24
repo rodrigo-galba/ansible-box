@@ -1,0 +1,37 @@
+---
+  # Create Puma directories
+- name: Create Puma pids directory
+  file:
+    path: "{{ project_path }}/shared/pids"
+    state: directory
+    mode: 0755
+
+  # Create Puma directories
+- name: Create Puma sockets directory
+  file:
+    path: "{{ project_path }}/shared/sockets"
+    state: directory
+    mode: 0755
+
+  # Create Puma directories
+- name: Create Puma log directory
+  file:
+    path: "{{ project_path }}/shared/log"
+    state: directory
+    mode: 0755
+
+- name: Copy Puma Jungle Upstart tool to the Upstart services directory
+  sudo: yes
+  template:
+    src: "../templates/puma.conf"
+    dest: /etc/init/puma.conf
+
+- name: Copy Puma Manager Jungle Upstart tool to the Upstart services directory
+  sudo: yes
+  template:
+    src: "../templates/puma-manager.conf"
+    dest: /etc/init/puma-manager.conf
+
+- name: Copy Puma configuration file
+  shell: 'echo "{{ project_path }}" > /etc/puma.conf'
+  sudo: yes

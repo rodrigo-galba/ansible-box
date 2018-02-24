@@ -1,0 +1,49 @@
+---
+- name: update apt
+  apt: update_cache=yes
+  sudo: yes
+
+- name: install base packages
+  apt: pkg={{ item }} state=latest
+  sudo: yes
+  with_items:
+    - git-core
+    - curl
+    - zlib1g-dev
+    - build-essential
+    - libssl-dev
+    - libreadline-dev
+    - libyaml-dev
+    - libsqlite3-dev
+    - sqlite3
+    - vim
+    - libxml2-dev
+    - libxslt1-dev
+    - libcurl4-openssl-dev
+    - python-software-properties
+    - nfs-common
+    - xvfb
+    - libqt4-dev
+    - libqtwebkit-dev
+    - nginx
+# https://github.com/thoughtbot/capybara-webkit/issues/513
+    # - qt5-default
+    # - libqt5webkit5-dev
+    # - libqt4-core
+    # - libqt4-gui
+    # - nodejs
+    # - libqtwebkit-dev
+    # - qt4-dev-tools
+    # - qt4-qmake
+    # - qtcreator
+    # - libqt5webkit5-dev
+
+# - name: Download Firefox 34
+#   shell: wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/34.0.5/linux-x86_64/en-US/firefox-34.0.5.tar.bz2
+
+# - name: Unzip Firefox
+#   shell: tar xvf firefox-34.0.5.tar.bz2
+
+# - name: symlink node
+#   shell: sudo ln -s /usr/bin/nodejs /usr/bin/node
+#   register: result

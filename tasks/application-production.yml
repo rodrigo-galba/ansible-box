@@ -1,0 +1,12 @@
+---
+  - name: Install gem bundler
+    command: "chdir=/{{ host_user }} gem install bundler --no-ri --no-rdoc"
+    environment:
+      PATH: "{{ rvm_path }}"
+      GEM_PATH: "{{ gem_path }}"
+
+  - name: Bundle project gems
+    command: "chdir=/{{ host_user }} bundle install --without development test"
+    environment:
+      PATH: "{{ rvm_path }}"
+      GEM_PATH: "{{ gem_path }}"
