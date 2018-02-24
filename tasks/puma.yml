@@ -21,17 +21,17 @@
     mode: 0755
 
 - name: Copy Puma Jungle Upstart tool to the Upstart services directory
-  sudo: yes
+  become: yes
   template:
     src: "../templates/puma.conf"
     dest: /etc/init/puma.conf
 
 - name: Copy Puma Manager Jungle Upstart tool to the Upstart services directory
-  sudo: yes
+  become: yes
   template:
     src: "../templates/puma-manager.conf"
     dest: /etc/init/puma-manager.conf
 
 - name: Copy Puma configuration file
   shell: 'echo "{{ project_path }}" > /etc/puma.conf'
-  sudo: yes
+  become: yes

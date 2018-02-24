@@ -3,8 +3,9 @@
   apt: pkg={{ item }} state=latest
   become: yes
   with_items:
-    - openjdk-7-jdk
+    - openjdk-8-jdk
     - zip
+    - maven
 
 # mkdir -p src/main/java/hello
 # curl -s https://get.sdkman.io | bash

@@ -12,7 +12,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider :virtualbox do |vb|
     vb.gui = false
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize [
+      "modifyvm", :id,
+      "--memory", "1024",
+      # set available CPU's count
+      "--cpus", `awk "/^processor/ {++n} END {print n}" /proc/cpuinfo 2> /dev/null || sh -c 'sysctl hw.logicalcpu 2> /dev/null || echo ": 2"' | awk \'{print \$2}\' `.chomp
+    ]
   end
 
   config.vm.network :forwarded_port, guest: 4200, host: 4200

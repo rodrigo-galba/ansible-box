@@ -3,26 +3,33 @@
   become: yes
   shell: sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' > /etc/apt/sources.list.d/pgdg.list" && wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | sudo apt-key add -
 
-- name: Install Postgresql 9.3
+- name: Install Postgresql 9.5
   apt: pkg={{ item }} state=latest
   become: yes
   with_items:
     - postgresql-common
-    - postgresql-9.3
+    - postgresql
     - python-psycopg2
     - libpq-dev
     - ptop
 
+- name: Starts Postgres if not running
+  become: yes
+  service:
+    name: postgresql
+    state: started
+
 - name: Create Local User on Postgresql
-  shell: sudo -u postgres createuser {{ db_user }} -s
+  become_user: postgres
+  shell: createuser {{ db_user }} -s
   ignore_errors: yes
 
 ############################################################
 #### Postgresql remote acces for development mode
-# $ sudo vim /etc/postgresql/9.3/main/postgresql.conf
+# $ sudo vim /etc/postgresql/9.5/main/postgresql.conf
 ## listen_addresses = '*'
 
-# $ sudo vim /etc/postgresql/9.3/main/pg_hba.conf
+# $ sudo vim /etc/postgresql/9.5/main/pg_hba.conf
 ## host     all             all             all           md5
 
 # $psql -U vagrant -d postgres

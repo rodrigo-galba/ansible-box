@@ -1,7 +1,7 @@
 ---
 - name: install zsh
   apt: pkg={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items:
     - zsh
 
@@ -13,5 +13,5 @@
 
 
 - name: set default shell to zsh
-  sudo: yes
+  become: yes
   user: name=vagrant shell=/bin/zsh

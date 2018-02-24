@@ -4,6 +4,6 @@
 
 - name: update nodejs
   apt: pkg={{ item }} state=latest
-  sudo: yes
+  become: yes
   with_items:
     - nodejs
