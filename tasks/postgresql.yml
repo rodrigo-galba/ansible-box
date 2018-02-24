@@ -3,7 +3,7 @@
   become: yes
   apt_repository: repo='deb https://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present
 
-- name: add trusted key
+- name: add postgres trusted key
   become: yes
   apt_key: url=https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc state=present
 

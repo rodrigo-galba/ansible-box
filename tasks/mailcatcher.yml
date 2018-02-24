@@ -1,0 +1,6 @@
+---
+  - name: install mailcatcher
+    shell: ~/.rvm/rubies/{{ ruby_version }}/bin/gem install mailcatcher
+
+  - name: start mailcatcher
+    shell: mailcatcher --ip 0.0.0.0
