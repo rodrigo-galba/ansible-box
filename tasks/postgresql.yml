@@ -1,7 +1,11 @@
 ---
 - name: Add Postgres Repo
   become: yes
-  shell: sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' > /etc/apt/sources.list.d/pgdg.list" && wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | sudo apt-key add -
+  apt_repository: repo='deb https://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' state=present
+
+- name: add trusted key
+  become: yes
+  apt_key: url=https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc state=present
 
 - name: Install Postgresql 9.5
   apt: pkg={{ item }} state=latest
