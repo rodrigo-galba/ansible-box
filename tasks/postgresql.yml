@@ -12,7 +12,7 @@
   become: yes
   with_items:
     - postgresql-common
-    - postgresql
+    - postgresql-9.5
     - python-psycopg2
     - libpq-dev
     - ptop

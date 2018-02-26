@@ -26,6 +26,7 @@
     - libqt4-dev
     - libqtwebkit-dev
     - nginx
+    - htop
 # https://github.com/thoughtbot/capybara-webkit/issues/513
     # - qt5-default
     # - libqt5webkit5-dev

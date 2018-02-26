@@ -5,7 +5,7 @@
     db_user: ubuntu
     root_db_password: password
     project_user: ubuntu
-    project_root: "/ubuntu"
+    project_root: "/home/ubuntu"
     project_path: "{{ project_root }}"
     host_user: ubuntu
     rvm_path: "/home/{{ host_user }}/.rvm/gems/{{ ruby_version }}/bin:/home/{{ host_user }}/.rvm/gems/{{ ruby_version }}@global/bin:/home/{{ host_user }}/.rvm/rubies/{{ ruby_version }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/{{ host_user }}/.rvm/bin:/home/{{ host_user }}/.rvm/bin"
