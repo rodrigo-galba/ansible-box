@@ -1,19 +1,40 @@
 ---
 - hosts: all
   vars:
-    ruby_version: ruby-2.3.4
-    db_user: ubuntu
-    root_db_password: password
-    project_user: ubuntu
-    project_root: "/home/ubuntu"
-    project_path: "{{ project_root }}"
-    host_user: ubuntu
+    ruby_version: ruby-2.3.1
     rvm_path: "/home/{{ host_user }}/.rvm/gems/{{ ruby_version }}/bin:/home/{{ host_user }}/.rvm/gems/{{ ruby_version }}@global/bin:/home/{{ host_user }}/.rvm/rubies/{{ ruby_version }}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/{{ host_user }}/.rvm/bin:/home/{{ host_user }}/.rvm/bin"
     gem_path: "/home/{{ host_user }}/.rvm/gems/{{ ruby_version }}:/home/{{ host_user }}/.rvm/gems/{{ ruby_version }}@global"
+    db_user: vagrant
+    db_password: password
+    # app_database_name: user_app
+    host_user: "{{ lookup('env','USER') }}"
+    project_root: "~/project"
+    project_path: "{{ project_root }}"
     redis_port: 6379
     redis_password: secret
     rabbitmq_username: user2
     rabbitmq_password: secret
+    mail_message_queue: mail.message.queue
+    sdkman_script_install_url: http://get.sdkman.io
+    sdkman_folder: "~/.sdkman"
+    sonar_version: 7.4
+    sonar_db_user: sonar
+    sonar_db_password: password
+
+    roles:
+    - role: jdauphant.ssl-certs
+      ssl_certs_local_cert_data: "{{vault_cert_data}}"
+      ssl_certs_local_privkey_data: "{{vault_privkey_data}}"
+    - role: jdauphant.nginx
+      nginx_configs:
+        ssl:
+        - ssl_certificate_key {{ssl_certs_privkey_path}}
+        - ssl_certificate     {{ssl_certs_cert_path}}
+      nginx_sites:
+        default:
+          template: sonar/sonar.conf.j2
+          server_name: sonar.entelect.co.za
+
   tasks:
     - name: make sure the system encoding is utf-8
       become: yes
@@ -24,12 +45,13 @@
         group: root
         mode: 0644
 
-    - include: tasks/apt.yml
-    - include: tasks/oh-my-zshell.yml
-    - include: tasks/finetune.yml
-    - include: tasks/ruby.yml
-    - include: tasks/mailcatcher.yml
-    - include: tasks/java.yml
-    - include: tasks/postgresql.yml
-    - include: tasks/redis.yml
-    - include: tasks/rabbitmq.yml
+    # - include: tasks/apt.yml
+    # - include: tasks/oh-my-zshell.yml
+    # - include: tasks/finetune.yml
+    # - include: tasks/ruby.yml
+    # - include: tasks/mailcatcher.yml
+    # - include: tasks/java.yml
+    # - include: tasks/postgresql.yml
+    # - include: tasks/redis.yml
+    # - include: tasks/rabbitmq.yml
+    - include: tasks/sonar.yml

@@ -1,0 +1,110 @@
+# https://medium.com/@mattpwest/setting-up-sonarqube-with-ansible-fcabadee6953
+---
+  tasks:
+  - name: Create the sonar user for running the SonarQube services
+    become: yes
+    user:
+      name: sonar
+      comment: System user for running SonarQube
+
+  - name: Download SonarQube
+    become: yes
+    get_url:
+      url: "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-{{ sonar_version }}.zip"
+      dest: "/opt/sonarqube-{{ sonar_version }}.zip"
+      owner: sonar
+
+
+  - name: Create sonar directory
+    become: yes
+    file:
+      path: "/opt/sonar/sonarqube-{{ sonar_version }}"
+      state: directory
+      owner: sonar
+
+  - name: Extract SonarQube
+    become: yes
+    unarchive:
+      src: "/home/{{ host_user }}/sonarqube-{{ sonar_version }}.zip"
+      dest: "/opt/sonar/"
+      copy: no
+      owner: sonar
+
+  - name: Link this version of sonarqube as the server SonarQube version
+    become: yes
+    file:
+      src: "/opt/sonar/sonarqube-{{ sonar_version }}"
+      dest: "/opt/sonarqube"
+      state: link
+      owner: sonar
+
+  - name: Configure Sonarqube
+    become: yes
+    template:
+      src: templates/sonar/sonar.properties.j2
+      dest: /opt/sonarqube/conf/sonar.properties
+      owner: sonar
+      group: sonar
+      mode: 0644
+      backup: yes
+
+  - name: Configure SonarQube DB username
+    become: yes
+    lineinfile:
+      path: "/opt/sonarqube/conf/sonar.properties"
+      regexp: "^sonar.jdbc.username="
+      insertafter: "^#sonar.jdbc.username="
+      line: "sonar.jdbc.username={{ sonar_db_user }}"
+
+  - name: Configure SonarQube DB password
+    become: yes
+    lineinfile:
+      path: "/opt/sonarqube/conf/sonar.properties"
+      regexp: "^sonar.jdbc.password="
+      insertafter: "^#sonar.jdbc.password="
+      line: "sonar.jdbc.password={{ sonar_db_password }}"
+
+  - name: Configure SonarQube DB connection string
+    become: yes
+    lineinfile:
+      path: "/opt/sonarqube/conf/sonar.properties"
+      regexp: "sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
+      insertafter: "^#sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
+      line: "sonar.jdbc.url=jdbc:postgresql://localhost/sonar"
+
+  - name: Configure SonarQube to run as the sonar user
+    become: yes
+    lineinfile:
+      path: "/opt/sonarqube/bin/linux-x86-64/sonar.sh"
+      regexp: "RUN_AS_USER=sonar"
+      insertafter: "#RUN_AS_USER="
+      line: "RUN_AS_USER=sonar"
+
+  - name: Copy the SonarQube service configuration file
+    become: yes
+    template:
+      src: "templates/sonar/sonarqube.service"
+      dest: "/etc/systemd/system/sonarqube.service"
+      owner: sonar
+
+  - name: Configure OS security limits for the sonar user
+    become: yes
+    template:
+      src: "templates/sonar/sonarqube.limits"
+      dest: "/etc/security/limits.d/99-sonarqube.conf"
+      owner: sonar
+
+  - name: Configure kernel level limits for ElasticSearch
+    become: yes
+    template:
+      src: "templates/sonar/sonarqube.sysctl"
+      dest: "/etc/sysctl.d/99-sonarqube.conf"
+      owner: sonar
+
+  - name: Enable the SonarQube service
+    become: yes
+    systemd:
+      state: started
+      enabled: yes
+      daemon_reload: yes
+      name: sonarqube
