@@ -27,6 +27,14 @@
     - libqtwebkit-dev
     - nginx
     - htop
+    - checkinstall
+    - libx11-dev
+    - libxext-dev
+    - libpng12-dev
+    - libjpeg-dev
+    - libfreetype6-dev
+    - libxml2-dev
+    - imagemagick
 # https://github.com/thoughtbot/capybara-webkit/issues/513
     # - qt5-default
     # - libqt5webkit5-dev
