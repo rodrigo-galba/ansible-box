@@ -2,7 +2,7 @@
 - hosts: all
   vars:
     ansible_python_interpreter: '{{ ansible_playbook_python }}'
-    host_user: "{{ lookup('env','USER') }}"
+    host_user: "vagrant"
 
   tasks:
     - name: make sure the system encoding is utf-8
@@ -14,4 +14,4 @@
         group: root
         mode: 0644
 
-    - include: tasks/apt.yml
+    - include: tasks/microk8s.yml

@@ -1,0 +1,45 @@
+---
+- name: install MicroK8s packages
+  become: yes
+  shell: snap install microk8s --classic
+
+- name: Setup permission to use MicroK8s 1/2
+  become: yes
+  shell: "usermod -a -G microk8s {{ host_user }}"
+
+- name: Setup permission to use MicroK8s 2/2
+  file:
+    path: "/home/{{ host_user }}/.kube"
+    owner: "{{ host_user }}"
+  ignore_errors: true
+
+- name: check Microk8s status
+  shell: "microk8s status --wait-ready | grep running | awk '{print $3}'"
+  register: cluster_status
+
+- debug: var=cluster_status.stdout
+
+- name: check microk8s is ready
+  fail:
+    msg: MicroK8s not running
+  when: cluster_status.stdout != 'running'
+
+- name: enable dns
+  shell: microk8s enable dns
+  when: cluster_status.stdout == 'running'
+
+- name: enable metrics server
+  shell: microk8s enable metrics-server
+  when: cluster_status.stdout == 'running'
+
+- name: enable local storage
+  shell: microk8s enable storage
+  when: cluster_status.stdout == 'running'
+
+- name: enable helm3
+  shell: microk8s enable helm3
+  when: cluster_status.stdout == 'running'
+
+- name: enable dashboard
+  shell: microk8s enable dashboard
+  when: cluster_status.stdout == 'running'

@@ -85,11 +85,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision :ansible_local, playbook: "playbook-base.yml"
   end
 
-  config.vm.define :cloudbox, primary: true do |config|
+  config.vm.define :kubebox, primary: true do |config|
     config.vm.network :private_network, ip: "192.168.3.5"
     config.vm.box = "rogal/cloud-dev-box"
     config.vm.box_version = "0.0.1"
     config.vm.provision :ansible_local, playbook: "playbook.yml"
+  end
+
+  config.vm.define :kubedevbox, primary: true do |config|
+    config.vm.network :private_network, ip: "192.168.3.5"
+    config.vm.box = "rogal/kubebox"
+    config.vm.box_version = "0.0.1"
   end
 
   ## Utils
